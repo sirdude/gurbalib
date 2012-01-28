@@ -18,6 +18,12 @@ cd to your gurbalib dir and perform the following actions:
 	tar xvf dgd-*.tar
 		extract the tar file.
 	cd dgd/src
+	edit Makefile if you want networking
+		to enable support for intermud and the ftp daemon, change
+		the line that looks like:
+		DEFINES=-D$(HOST)        #-DNETWORK_EXTENSIONS -DCLOSURES -DCO_THROTTLE=50 -DDUMP_FUNCS
+		to:
+		DEFINES=-D$(HOST)        -DNETWORK_EXTENSIONS #-DCLOSURES -DCO_THROTTLE=50 -DDUMP_FUNCS
 	make
 	make install
 	cd ../../..
