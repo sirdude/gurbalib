@@ -28,15 +28,14 @@ nomask int is_kernel_object() {
  * used in combination with unguarded.
  */
 
-#ifdef SYS_NETWORKING
 
 /*
  * Network related 
  */
 
 #include "afun-game/connect.c"
+#ifdef SYS_NETWORKING
 #include "afun-game/open_port.c"
-
 #endif
 
 /* 

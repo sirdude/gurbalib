@@ -135,11 +135,14 @@ static void close(varargs int force) {
    _close(DRIVER->new_tls(), force);
 }
 
-#ifdef SYS_NETWORKING
 void connect(string ip, int port, varargs string proto) {
    if (previous_object() == user) {
       if (!proto)
 	 proto = "tcp";
+#ifndef SYS_NETWORKING
+      if (proto != "tcp")
+	 error("Unsupported protocol");
+#endif
 
       set_protocol(proto);
 
@@ -147,14 +150,17 @@ void connect(string ip, int port, varargs string proto) {
 	 DEBUG("Making outbound " + protocol + " connection to : " + ip + ", " +
 	    port);
 	 catch {
+#ifdef SYS_NETWORKING
 	    ::connect(ip, port, proto);
+#else
+	    ::connect(ip, port);
+#endif
 	 } : {
 	    _receive_error(nil, caught_error());
 	 }
       }
    }
 }
-#endif
 
 int message(string str) {
    int len;
@@ -207,6 +213,15 @@ static void _receive_error(mixed * tls, string err) {
 static void receive_error(string err) {
    _receive_error(DRIVER->new_tls(), err);
 }
+
+#ifndef SYS_NETWORKING
+
+static void unconnected(int refused) {
+   _receive_error(DRIVER->new_tls(),
+		  (refused) ? "Connection refused" : "Connection failed");
+}
+
+#endif
 
 static void _receive_message(mixed * tls, string str) {
    if (user) {

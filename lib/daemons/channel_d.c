@@ -31,9 +31,7 @@ void chan_send_string(string chan, string from, string str,
    varargs int is_emote);
 
 void resubscribe() {
-#ifdef SYS_NETWORKING
    IMUD_D->subscribe_event("i3_connection");
-#endif
 }
 
 void create(void) {
@@ -357,7 +355,6 @@ void chan_emote(string chan, string what) {
 	 what = this_player()->query_Name() + " " + cmd;
    }
 
-#ifdef SYS_NETWORKING
    ichans = map_indices(imud);
    for (i = 0, sz = sizeof(ichans); i < sz; i++) {
       if (imud[ichans[i]] == chan) {
@@ -369,7 +366,6 @@ void chan_emote(string chan, string what) {
 	 return;
       }
    }
-#endif
 
    chan_send_string(chan, this_player()->query_name(), what, EMOTE);
 }
@@ -392,7 +388,6 @@ void chan_say(string chan, string what) {
    if (!what || what == "")
       return;
 
-#ifdef SYS_NETWORKING
    ichans = map_indices(imud);
    for (i = 0, sz = sizeof(ichans); i < sz; i++) {
       if (imud[ichans[i]] == chan) {
@@ -401,7 +396,6 @@ void chan_say(string chan, string what) {
 	 return;
       }
    }
-#endif
 
    chan_send_string(chan, this_player()->query_name(), what, NOT_EMOTE);
 }

@@ -12,7 +12,7 @@
 private string *default_init() {
    string *objects;
 
-   objects = ( { SCHEDULE_D, CHANNEL_D, TIME_D, USER_D } );
+   objects = ( { SCHEDULE_D, CHANNEL_D, TIME_D, USER_D, IMUD_D } );
 
 #ifdef SYS_NETWORKING
    objects += ( {
@@ -20,7 +20,6 @@ private string *default_init() {
 #ifndef DISABLE_FTP
         FTP_D,
 #endif
-      IMUD_D
    } );
 #endif
 

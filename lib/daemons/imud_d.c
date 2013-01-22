@@ -912,6 +912,13 @@ void receive_error(string err) {
    }
 }
 
+#ifndef SYS_NETWORKING
+static void unconnected(int refused)
+{
+   receive_error((refused) ? "Connection refused" : "Connection failed");
+}
+#endif
+
 int query_connected() {
    return connected;
 }
