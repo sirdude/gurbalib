@@ -170,42 +170,36 @@ void do_standard_checks(object obj) {
 
 }
 
-int check_functions(object obj, mapping funs) {
-   string *indices;
-   string funname;
+
+int check_functions(object obj, mixed funs) {
    int x, c;
 
-   if (!funs) {
+   if (!funs)
       return -1;
-   }
- 
+      
+   x = sizeof(funs) - 1;
+   
+   if(x < 0)
+      return -1;
+
    c = 0;
-
-   if (indices = map_indices(funs)) {
-      x = sizeof(indices) -1;
-      if (x < 0) {
-         return -1;
-      }
-      while (x > -1) {
-         funname = funs[indices[x]];
-
-         write("Checking Function: " + indices[x] + " " + funname + "\n");
-
-         if (!function_object(funname,obj)) {
-            warn("Warning: Function " + funname + " not define in: " +
-            obj->file_name() + "\n");
-            c = c + 1;
+   
+   while(x > -1) {
+      write("Checking Function: "+obj->query_object_command( funs[x] )+"\n"); 
+      if(!function_object( obj->query_object_command( funs[x] ), obj ) ) {
+         warn("Warning: Function " + obj->query_object_command( funs[x] ) + " not defined in: " +
+         obj->file_name() + "\n");
+         c = c + 1;
          }
-
-         x = x - 1;
-      }
-   }
+    x--;
+    }
    if (c > 0) return 0;
    return 1;
 }
 
+
 void do_room_check(object obj) {
-   mapping myexits;
+   mixed myexits;
    int x;
 
    write("Doing room check\n");
@@ -235,7 +229,7 @@ void do_room_check(object obj) {
    }
 
    write("Checking room commands: ");
-   myexits = obj->query_room_commands();
+   myexits = obj->query_object_commands();
    x = check_functions(obj,myexits);
 
    if (x == -1) {
@@ -264,7 +258,7 @@ void do_monster_check(object obj) {
 
 void do_object_check(object obj) {
    string tmpstr;
-   mapping functions;
+   string *functions;
    int x;
 
    write("Doing object check\n");
@@ -279,7 +273,7 @@ void do_object_check(object obj) {
       warn("Object ungettable and value > 1\n");
    }
 
-   functions = obj->query_room_commands();
+   functions = obj->query_object_commands();
    write("Checking object functions.\n");
    x = check_functions(obj,functions);
 
@@ -321,7 +315,7 @@ void do_check(string str) {
             error("Unable to compile: " + str + "\n");
          }
       } else {
-            error("FIle does not exist: " + str + "\n");
+            error("File does not exist: " + str + "\n");
       }
    }
 }

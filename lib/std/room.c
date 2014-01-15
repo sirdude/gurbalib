@@ -5,7 +5,6 @@ inherit cont "/std/container";
 static mapping exits;
 static mapping hidden_exits;
 static mapping areas;
-static mapping room_commands;
 static mapping items;
 static int last_exit;
 static int weather;
@@ -27,7 +26,6 @@ void create(void) {
    exits = ([]);
    hidden_exits = ([]);
    areas = ([]);
-   room_commands = ([]);
    items = ([]);
    last_exit = 0;
    light = 1;
@@ -267,27 +265,27 @@ string query_desc(varargs int brief) {
    return text;
 }
 
+/* Room command code functionally merged with object command code. *
+   These functions are left for reverse compatibility */
+   
 void add_room_command(string command, string func) {
-   if (!room_commands[command]) {
-      room_commands += ([command:func]);
-   } else {
-      room_commands[command] = func;
-   }
+	add_object_command(command, func);
 }
 
 void remove_room_command(string command) {
-   room_commands[command] = nil;
+   remove_object_command(command);
 }
 
 string query_room_command(string command) {
-   return room_commands[command];
+   return query_object_command(command);
 }
 
-mapping query_room_commands() {
-   if (!room_commands) {
-      return ([ ]);
+string *query_room_commands() {
+
+   if ( !query_object_commands() ) {
+      return ({ });
    }
-   return room_commands;
+   return query_object_commands();
 }
 
 void set_items(string id, varargs mixed args ...) {
