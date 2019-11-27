@@ -194,15 +194,17 @@ void damage_target(int dam, object who) {
 int query_defense(void) {
    int me, i, max, skill;
    object *armor;
-   
-   /* this section needed to prevent defence from going infinite */
-   /* random(0) causes the full range to be used */
+
    skill = (this_object()->query_skill("combat/defense") / 50);
-   if (skill == 0) {
-      skill = 1;
+   if (skill > 0) {
+      /* if skill is greater than zero use random */
+      me = random(skill);
+   } else {
+      /* if skill is 0 then prevent random(0) from */
+      /* using the full range */
+      me = random(1);
    }
 
-   me = random(skill);
    me += this_object()->query_statbonus("dex");
    armor = this_object()->query_equipment();
 
@@ -386,7 +388,7 @@ void attack_with(string skill, object weapon, object target) {
          damage = target->after_damage_hook(this_object(), weapon, damage);
 
          if (damage == 0) {
-            this_object()->targeted_action("$N " + 
+            this_object()->targeted_action("$N " +
                "$v" + weapon->query_weapon_action() + " $T with a " +
                weapon->query_id() + ", but $vdo no damage!", target);
          } else {
@@ -582,7 +584,7 @@ string *summarise_killers(void) {
       done = 1;
    }
 
-   if (!done) { 
+   if (!done) {
       lines += ({ "So far you have been spared, count yourself lucky.\n" });
    } else {
 
@@ -596,4 +598,3 @@ string *summarise_killers(void) {
 
    return lines;
 }
-
