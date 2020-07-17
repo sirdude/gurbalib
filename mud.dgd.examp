@@ -31,5 +31,5 @@ array_size	= 4000;			/* max array size */
 objects		= 500;			/* max # of objects */
 call_outs	= 200;			/* max # of call_outs */
 
-/* Example of how to load a module, the extension regexp */
-/* modules		= ({ "kfun_regexp" }); */ 
+/* Example of how to load a module, the JIT compiler extension */
+/* modules		= ([ "/lpc-ext/jit.1.2" : "/lpc-ext/jit" ]); */
