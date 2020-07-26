@@ -46,8 +46,8 @@ void verify_remove(string str) {
 }
 
 static void main(string str) {
-   string follower;
-   object obj, *followers;
+   string follower, *followers;
+   object obj;
    int x, max;
 
    if (!alsos) {
@@ -90,7 +90,9 @@ static void main(string str) {
             followers[x]->query_Name() + " stops following " +
             this_player()->query_Name() + ".\n",
             this_player());
-        }
+        } else {
+           this_player()->remove_follower(followers[x]);
+	}
      }
    }
 
