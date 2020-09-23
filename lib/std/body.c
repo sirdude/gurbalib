@@ -103,5 +103,6 @@ void create(void) {
    equipment = ([]);
    living_name = "mudlib";
    wielding = ({ });
+   clear_followers();
 }
 
