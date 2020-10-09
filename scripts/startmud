@@ -3,7 +3,9 @@ ROOT=.
 
 if [ -d $ROOT/lib/logs ]; then
 	LOG=$ROOT/lib/logs/gurba-driver.log
-	mv $LOG $LOG.old
+	if [ -f $LOG ]; then
+		mv $LOG $LOG.old
+	fi
 else
 	echo "Cannot locate $ROOT/lib/logs"
 	echo "did you run $ROOT/scripts/create_data_dirs?"
