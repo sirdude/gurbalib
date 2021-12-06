@@ -55,7 +55,8 @@ void close(varargs int force) {
 
 void start_connection(string ip, int port, int type) {
    secure();
-   unguarded("connect", ip, port);
+   connect(ip, port);
+   /* unguarded("connect", ip, port); */
 }
 
 void send_data(mixed data) {

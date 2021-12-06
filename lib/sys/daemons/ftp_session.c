@@ -158,11 +158,7 @@ void ftp_cmd_pass(string arg) {
 
    restore_privs();
 
-   if (priv) {
-      cwd = "/";
-   } else {
-      cwd = "/pub/";
-   }
+   cwd = "/pub/";
    USER_D->user_online(name, this_object());
 }
 
