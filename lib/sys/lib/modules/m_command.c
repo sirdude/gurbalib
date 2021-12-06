@@ -24,7 +24,7 @@ string *query_alsos() {
 }
 
 string get_also_type(string value) {
-   if (member_map(value, alsos)) {
+   if (alsos && member_map(value, alsos)) {
        return alsos[value];
    }
 

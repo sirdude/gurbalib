@@ -114,8 +114,7 @@ void check_a_spell(string filename) {
 
 void check_a_command(string filename) {
    object obj, tobj;
-   string *functionlist, *talsos, *fname, tf;
-   string atype, pfile, wizfile, adminfile;
+   string *functionlist, *talsos, *fname, tf, atype;
    int x, max;
    
    write("Check command: " + filename + "\n");
@@ -130,10 +129,7 @@ void check_a_command(string filename) {
    fname = path_file(filename);
 
    functionlist = ({ "usage" });
-/*
-   functionlist += ({ "main" });
-   functionlist += ({ "query_command" });
-*/
+   functionlist += ({ "setup_alsos" });
    
    max = sizeof(functionlist);
    for (x = 0; x < max; x++) {
@@ -158,19 +154,16 @@ void check_a_command(string filename) {
             warn(obj->file_name() + ": references unknown also " + talsos[x] +
                "\n");
          } else {
-            tobj->setup_alsos();
+/*            tobj->setup_alsos(); */
             if (!member_array(talsos[x], tobj->query_alsos())) {
                warn(obj->file_name() + ": also " + talsos[x] + 
                   " not back referenced.\n");
             } else {
                atype = tobj->get_also_type(talsos[x]);
-write("looking at " + talsos[x] + " type: " + atype + "\n");
-               pfile = "/cmds/player/" + talsos[x] + ".c";
-               wizfile = "/sys/cmds/wiz/" + talsos[x] + ".c";
-               adminfile = "/sys/cmds/admin/" + talsos[x] + ".c";
-               if (((atype == "player") && file_exists(pfile)) ||
-                  ((atype == "wiz") && file_exists(wizfile)) ||
-                  ((atype == "admin") && file_exists(adminfile))) {
+               if ((atype == "player") && file_exists("/cmds/player/" + talsos[x] + ".c")) {
+               }else if ((atype == "wiz") && file_exists("/sys/cmds/wiz/" + talsos[x] + ".c")) {
+               } else if ((atype == "admin") && file_exists("/sys/cmds/admin/" + talsos[x] + ".c")) {
+               } else if ((atype == "monster") && file_exists("/cmds/monster/" + talsos[x] + ".c")) {
                } else {
                   warn(obj->file_name() + " has wrong type \"" + atype + 
                      "\" for also: " + talsos[x] + "\n");
