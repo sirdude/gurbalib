@@ -85,7 +85,7 @@ string query_level_title(int level) {
 }
 
 void increase_level(void) {
-   level += 1;
+   level++;
    this_object()->set_max_hp((level *
       this_object()->query_base_stat("str")) + 20);
    this_object()->set_max_mana((level *
@@ -98,7 +98,7 @@ void increase_level(void) {
 
 void increase_expr(int expr) {
    if (expr < 0) {
-      expr = expr * -1;
+      expr = -expr;
    }
    experience += expr;
    if (experience < 0) {
@@ -107,7 +107,6 @@ void increase_expr(int expr) {
    if (ready_for_next_level()) {
       increase_level();
       write("Congratulations, you just went up a level...\n");
-      level += 1;
    }
 }
 
