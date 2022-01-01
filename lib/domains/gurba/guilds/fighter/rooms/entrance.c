@@ -43,20 +43,3 @@ int do_listen(void) {
    return 1;
 }
 
-/*
-int join_guild(string str) {
-   if (!str || str == "" || str == "fighter" || str == "fighters") {
-      if (!present()) {
-         write("The guild master is not here, you will have to wait " +
-            "for him to come back.");
-         return 1;
-      } else {
-         if (
-      }
-   }
-   return 0;
-}
-
-int leave_guild(string str) {
-}
-*/
