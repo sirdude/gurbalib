@@ -62,7 +62,7 @@ nomask int teleport_cmd(string str) {
       write("*poof*");
       this_player()->set_mana(this_player()->query_mana() - WIZHAT_COST);
       this_player()->move(obj);
-      this_player()->do_look(0);
+      this_player()->do_look(this_player()->query_environment());
       TELL_ROOM(this_player(), this_player()->query_Name() + " appears in a " +
          "puff of smoke.");
       return 1;

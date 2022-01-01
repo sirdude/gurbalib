@@ -113,7 +113,7 @@ int do_save(string str) {
       this_object()->event("body_leave", this_player());
       tell_room(this_player(), this_player()->query_Name() + " leaves east.\n");
       obj->tell_room(this_player(), this_player()->query_Name() + " enters.\n");
-      this_player()->do_look(0);
+      this_player()->do_look(this_player()->query_environment());
    } else {
       write("Error going there...\n");
    }
