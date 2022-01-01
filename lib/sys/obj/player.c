@@ -527,7 +527,7 @@ void add_cmd_path(string path) {
    if (require_priv(owner_file(path))) {
       cmd::add_cmd_path( path );
    } else {
-      error("Permission denied.");
+      error("Permission denied for path:" + path );
    }
 }
 
@@ -1219,7 +1219,9 @@ void receive_message(string message) {
       if (!flag) {
          object room;
          string roomcmd_h;
+		 int done;
 
+		 done = 0;
          room = this_player()->query_environment();
          if (room) {
             object *objs;
@@ -1229,11 +1231,16 @@ void receive_message(string message) {
             if (objs) {
                maxy = sizeof(objs);
                for (y = 0; y < maxy; y++) {
-                  roomcmd_h = objs[y]->query_action(cmd);
+			      if (!done) {
+                     roomcmd_h = objs[y]->query_action(cmd);
 
-                  if (roomcmd_h) {
-                     flag = call_other(objs[y], roomcmd_h, arg);
-                  }
+                     if (roomcmd_h) {
+                        flag = call_other(objs[y], roomcmd_h, arg);
+						if (flag) {
+						   done = 1;
+						}
+                     }
+				  }
                }
             }
          }
