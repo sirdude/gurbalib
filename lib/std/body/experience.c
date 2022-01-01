@@ -85,7 +85,9 @@ string query_level_title(int level) {
 }
 
 void increase_level(void) {
-   object to = this_object();
+   object to;
+
+   to = this_object();
    level++;
    to->set_max_hp((level *
       to->query_base_stat("str")) + 20);
