@@ -85,15 +85,16 @@ string query_level_title(int level) {
 }
 
 void increase_level(void) {
+   object to = this_object();
    level++;
-   this_object()->set_max_hp((level *
-      this_object()->query_base_stat("str")) + 20);
-   this_object()->set_max_mana((level *
-      this_object()->query_base_stat("wis")) + 20);
-   this_object()->set_max_end((level *
-      this_object()->query_base_stat("con")) + 20);
+   to->set_max_hp((level *
+      to->query_base_stat("str")) + 20);
+   to->set_max_mana((level *
+      to->query_base_stat("wis")) + 20);
+   to->set_max_end((level *
+      to->query_base_stat("con")) + 20);
    write("Congratulations, you just achieved level: " + level + "\n");
-   this_object()->set_title("$N " + query_level_title(level));
+   to->set_title("$N " + query_level_title(level));
 }
 
 void increase_expr(int expr) {
