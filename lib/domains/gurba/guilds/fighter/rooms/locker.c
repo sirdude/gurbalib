@@ -5,6 +5,21 @@ inherit "/std/room";
 string player_name;
 string *myitems;
 
+void setup(void) {
+   set_short(" An unknown locker room");
+   set_long("You can store your stuff here.");
+
+   set_exits(([
+      "west" : "#go_storage"
+   ]));
+}
+
+int set_player_name(string str) {
+   player_name = str;
+   set_short(capitalize(str) + "'s locker room");
+   return 1;
+}
+
 void restore_me(void) {
    object obj;
    int i, max;
@@ -75,24 +90,8 @@ void save_me(void) {
    unguarded("save_object", DIR + "/data/lockers/" + player_name + "/locker.o");
 }
 
-void set_player_name(string str) {
-   player_name = str;
-   set_short(capitalize(player_name) + "'s locker room");
-}
-
-void setup(void) {
-   set_short(" An unknown locker room");
-   set_long("You can store your stuff here.");
-
-   add_action("do_save", "save");
-
-   set_exits(([
-      "west" : DIR + "/guilds/fighter/rooms/storage.c",
-   ]));
-}
-
 /* On exit need to save_me and destroy this object... XXX */
-int do_save(string str) {
+int go_storage(void) {
    object obj;
    string file;
 
@@ -104,20 +103,23 @@ int do_save(string str) {
          obj->setup();
          obj->setup_mudlib();
       } : {
-         write("Could not load " + str);
+         write("Could not load :" + file);
+		 return 1;
       }
    }
 
+   this_player()->query_environment()->tell_room(this_player(),
+      this_player()->query_Name() + " leaves west.\n");
    if (this_player()->move(obj)) {
-      /* XXX Need to move this stuff to other move's like summon/goto */
-      this_object()->event("body_leave", this_player());
-      tell_room(this_player(), this_player()->query_Name() + " leaves east.\n");
-      obj->tell_room(this_player(), this_player()->query_Name() + " enters.\n");
+      this_player()->query_environment()->tell_room(this_player(),
+	     this_player()->query_Name() + " enters.\n");
       this_player()->do_look(this_player()->query_environment());
    } else {
       write("Error going there...\n");
+	  return 1;
    }
 
    save_me();
    clean_up();
+   return 1;
 }

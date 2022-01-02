@@ -44,12 +44,11 @@ void go_locker(void) {
       obj->save_me();
    }
 
+   this_player()->query_environment()->tell_room(this_player(),
+      this_player()->query_Name() + " leaves east.\n");
    if (this_player()->move(obj)) {
-      /* XXX Need to move this stuff to other move's like summon/goto */
-      this_object()->event("body_leave", this_player());
-      tell_room(this_player(), this_player()->query_Name() + " leaves east.\n");
       obj->tell_room(this_player(), this_player()->query_Name() + " enters.\n");
-      this_player()->do_look(this_player()->query_enviornment());
+	  this_player()->do_look(this_player()->query_environment());
    } else {
       write("Error going there...\n");
    }
