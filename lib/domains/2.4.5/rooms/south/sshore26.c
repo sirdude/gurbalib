@@ -39,19 +39,36 @@ string query_long() {
 }
 
 int go_southeast() {
-   string usermsg, othermsg;
+   object obj;
+   string file;
 
    if (this_player()->query_level() <= 15) {
       write("The bridge to the Isle of the Magi has collapsed, making the " +
          "trip across impossible.");
       return 1;
    }
-   add_exit("southeast", DIR + "/rooms/south/sislnd1.c");
-   usermsg = "Trusting in your faith, you step onto the magical bridge " +
-      "and move across to the Isle of the Magi.";
-   othermsg =  this_player()->query_Name() + " walks across a faintly " +
-      "glowing bridge.";
 
-   /* XXX domove(DIR + "/rooms/south/sislnd1.c", usermsg, othermsg); */
+   file = DIR + "/rooms/south/sislnd1.c";
+   if (!(obj = find_object(file))) {
+       catch {
+          obj = compile_object(file);
+          obj->setup();
+          obj->setup_mudlib();
+       } : {
+          write("Could not load :" + file);
+          return 1;
+       }
+   }
+   write("Trusting in your faith, you step onto the magical bridge " +
+      "and move across to the Isle of the Magi.\n");
+   this_player()->query_environment()->tell_room(this_player(),
+      this_player()->query_Name() + " walks across a faintly glowing bridge.");
+   if (this_player()->move(obj)) {
+      this_player()->query_environment()->tell_room(this_player(),
+	     this_player()->query_Name() + " enters.\n");
+		 this_player()->do_look(this_player()->query_environment());
+   } else {
+      write("Error going across the bridge.\n");
+   }
    return 1;
 }

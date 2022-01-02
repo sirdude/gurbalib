@@ -18,11 +18,29 @@ void setup(void) {
 }
 
 int do_climb(string str) {
-   string usermsg, othermsg;
+   object obj;
+   string file;
 
-   usermsg = "You climb up the hill.";
-   othermsg = this_player()->query_Name() + " climbs up the ravine.";
-
-   /* XXX domove(DIR + "/rooms/ravine.c", usermsg, othermsg);  */
+   file = DIR + "/rooms/ravine.c";
+   if (!(obj = find_object(file))) {
+      catch {
+         obj = compile_object(file);
+         obj->setup();
+         obj->setup_mudlib();
+      } : {
+         write("Could not load :" + file);
+         return 1;
+      }
+   }
+   write("You climb up the hill.\n");
+   this_player()->query_environment()->tell_room(this_player(),
+     this_player()->query_Name() + " climbs up the ravine.");
+   if (this_player()->move(obj)) {
+      this_player()->query_environment()->tell_room(this_player(),
+         this_player()->query_Name() + " enters.\n");
+      this_player()->do_look(this_player()->query_environment());
+   } else {
+      write("Error climbing up the hill.\n");
+   }	
    return 1;
 }

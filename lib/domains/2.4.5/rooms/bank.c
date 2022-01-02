@@ -27,7 +27,7 @@ void setup(void) {
    key = "gurba bank key";
 }
 
-/* Need to attach these commands to a user... */
+/* XXX Need to attach open/close,lock,unlock to a user... */
 
 string look_door() {
    if (!door_closed) {
@@ -118,9 +118,34 @@ int lock_door() {
 }
 
 int enter_door() {
+   object obj;
+   string file;
+
    if (!door_closed) {
-/* XXX domove isn't done yet */
-      /* return domove(DIR + "/rooms/bankroom.c", usermsg, othermsg); */
+
+      file = DIR + "/rooms/bankroom.c";
+      if (!(obj = find_object(file))) {
+         catch {
+            obj = compile_object(file);
+            obj->setup();
+            obj->setup_mudlib();
+         } : {
+            write("Could not load :" + file);
+            return 1;
+         }
+      }
+      write("You enter the door.\n");
+      this_player()->query_environment()->tell_room(this_player(),
+        this_player()->query_Name() + " enters the door.");
+      if (this_player()->move(obj)) {
+         this_player()->query_environment()->tell_room(this_player(),
+            this_player()->query_Name() + " enters.\n");
+         this_player()->do_look(this_player()->query_environment());
+      } else {
+         write("Error the door seems to be broken.\n");
+      }	
+
+      return 1;
    } else {
       write("The door is closed.  Maybe you should open it first.\n");
       tell_room(this_player(), this_player()->query_Name() + 
