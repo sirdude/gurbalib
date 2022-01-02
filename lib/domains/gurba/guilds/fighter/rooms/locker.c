@@ -90,7 +90,7 @@ void save_me(void) {
    unguarded("save_object", DIR + "/data/lockers/" + player_name + "/locker.o");
 }
 
-/* On exit need to save_me and destroy this object... XXX */
+/* Need a function because on exit we save everything and destroy it. */
 int go_storage(void) {
    object obj;
    string file;
