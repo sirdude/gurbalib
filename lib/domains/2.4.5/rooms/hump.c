@@ -9,6 +9,7 @@ void setup(void) {
 
    set_short("Humpbacked bridge");
    set_long("An old humpbacked bridge.");
+   add_item("bridge", "It's old and in need of repair.");
 
    add_exit("east", DIR + "/rooms/vill_green.c");
    add_exit("west", DIR + "/rooms/wild1.c");
