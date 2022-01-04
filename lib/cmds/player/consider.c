@@ -67,11 +67,6 @@ static void main(string str) {
       return;
    }
 
-   if (this_player()->is_fighting() ) {
-      write("You are already in combat.\n");
-      return;
-   }
-
    level = obj->query_level();
    /*write("Level is: " + level + "\n");*/
 
