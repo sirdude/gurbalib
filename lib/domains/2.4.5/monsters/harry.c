@@ -41,6 +41,7 @@ void setup() {
    add_pattern("%s leaves %s", "go $2");
    add_pattern("%s gives you %s", "gives");
    add_pattern("%s gives you %s", "gives");
+   add_pattern("%s falls to the ground...dead", "monster_died");
 
    a_str = ({
       "say Don't hit me!",
@@ -166,19 +167,32 @@ private void gives(string str) {
       if (this_object()->present(what)) {
          who_obj = this_object()->query_environment()->present(who);
 
-         /* XXX sir, ma'am, creature... */
-         respond("say Thank you very much, sir.");
+		 if (who_obj->query_gender() == "male") {
+            respond("say Thank you very much, sir.");
+		 } else if (who_obj->query_gender() == "female") {
+            respond("say Thank you very much, ma'am.");
+		 } else {
+            respond("say Thank you very much.");
+		 }
       }
    }
 }
 
-/* XXX implement this. */
 void monster_died() {
-}
+   object *objs;
+   int num, i, max;
 
-int down() {
-   call_other(this_player(), "move_player", DIR + "/rooms/station");
-   return 1;
+   objs = this_object()->query_envrionment()->query_inventory(); 
+   max = sizeof(objs);
+   for (i = 0; i < max; i++) {
+      if (call_other(objs[i], "id") == "bottle") {
+	      destruct_object(objs[i]);
+		 num = 1;
+      }
+   }
+   if (num) {
+      notify("There is a crushing sound of bottles breaking, as the body falls.\n");
+   }
 }
 
 void do_extra_actions() {
