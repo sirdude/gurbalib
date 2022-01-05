@@ -2,11 +2,11 @@
 
 inherit "/std/room";
 
-int location, destination;
+int location, destination, moving_time, time_to_close_door;
 string open;
 
 void set_floor(int x) {
-   destination = x;
+   location = x;
 
    tell_room(this_object(), "The elevator starts moving.\n");
 
@@ -19,18 +19,25 @@ void set_floor(int x) {
          open = "open";
          remove_exit("east");
          add_exit("east", DIR + "/rooms/wiz_hall.c");
+		 call_other(DIR + "/rooms/wiz_hall", "el_arrives");
+		 time_to_close_door = 3;
          break;
       case 2:
          open = "open";
          remove_exit("east");
          add_exit("east", DIR + "/rooms/church.c");
+		 call_other(DIR + "/rooms/church", "el_arrives");
+		 time_to_close_door = 3;
          break;
       case 3:
+         open = "open";
          remove_exit("east");
          add_exit("east", DIR + "/rooms/attic.c");
-         open = "open";
+		 call_other(DIR + "/rooms/attic", "el_arrives");
+		 time_to_close_door = 3;
          break;
    }
+   tell_room(this_object(), "The elevator stops and the doors open.\n");
 }
 
 int query_location() {
@@ -42,9 +49,9 @@ void setup(void) {
 
    set_short("Elevator");
 
-   location = 1;
-   set_floor(1);
-   add_exit("north", DIR + "/rooms/vill_shore.c");
+   destination = 2;
+   set_floor(2);
+   moving_time = 0;
    add_action("press_button", "press");
    add_action("press_button", "push");
 }
@@ -59,32 +66,79 @@ string query_long() {
    return str;
 }
 
-/* XXX Need to do the door, button and stuff.... */
-
 int press_button(string str) {
    object elev;
+   int num;
 
-   if (str == "1") {
-      write("You press button 1.\n");
-      this_object()->tell_room(this_player(), this_player()->query_Name() +
-         " presses button 1.\n");
-      set_floor(1);
+   if (str == "1" || str == "2" || str == "3") {
+      sscanf(str, "%d", num);
+      if (location == num) {
+	     write("You are already at level " + num + ".\n");
+	  } else {
+	     destination = num;
+         write("You press button " + num + ".\n");
+         this_object()->tell_room(this_player(), this_player()->query_Name() +
+            " presses button " + num + ".\n");
+		 if (destination > location) {
+		    moving_time = destination - location;
+		    say("The elevator jerks upward.\n");
+		 } else if (location > destination) {
+		    moving_time = location - destination;
+		    say("The elevator starts moving down.\n");
+		 }
+		 if ((destination == 1) || (location == 1)) {
+		    moving_time += 10;
+		 }
+		 moving_time += 1;
+         EVENT_D->subscribe_event("heart_beat");
 
-   } else if (str == "2") {
-      write("You press button 2.\n");
-      this_object()->tell_room(this_player(), this_player()->query_Name() +
-         " presses button 2.\n");
-      set_floor(2);
-
-   } else if (str == "3") {
-      write("You press button 3.\n");
-      this_object()->tell_room(this_player(), this_player()->query_Name() +
-         " presses button 3.\n");
-      set_floor(3);
-
+      }
    } else {
       write("Which button do you want to press? (1, 2, 3)?\n");
    }
    return 1;
 }
 
+void call_elevator(int button) {
+   destination = button;
+   if (destination == location) {
+      return;
+   }
+   destination = button;
+   if (destination > location) {
+      moving_time = destination - location;
+      say("The elevator jerks upward.\n");
+   } else if (location > destination) {
+      moving_time = location - destination;
+      say("The elevator starts moving down.\n");
+   }
+   if ((destination == 1) || (location == 1)) {
+      moving_time += 10;
+   }
+}
+
+void event_heart_beat() {
+   if (time_to_close_door >0) {
+      time_to_close_door -= 1;
+      if (time_to_close_door == 0) {
+	     if (location == 1) {
+            call_other(DIR + "/rooms/wiz_hall", "el_leavess");
+		 } else if (location == 2) {
+            call_other(DIR + "/rooms/church", "el_leaves");
+		 } else if (location == 3) {
+            call_other(DIR + "/rooms/attic", "el_leaves");
+		 }
+         say("The door swings shut.\n");
+      }
+   }
+   if (moving_time <= 0) {
+      return;
+   }
+   moving_time -= 1;
+   if (moving_time > 0) {
+      say("The elevator continues.\n");
+      return;
+   }
+   EVENT_D->unsubscribe_event("heart_beat");
+   set_floor(destination);
+}
