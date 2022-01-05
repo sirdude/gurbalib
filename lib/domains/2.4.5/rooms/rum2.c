@@ -11,4 +11,3 @@ void setup(void) {
    add_exit("west", DIR + "/rooms/test.c");
 }
 
-/* XXX Need to get doors working? for the exit west... */

@@ -17,6 +17,7 @@ void setup(void) {
 
    add_action("press_button", "press");
    add_action("press_button", "push");
+   add_exit("north", DIR + "/rooms/test.c");
 
    set_objects (DIR + "/monsters/leo.c");
 

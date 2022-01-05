@@ -18,16 +18,19 @@ void setup(void) {
 
    set_short("Computer room");
 
-   add_exit("east", "/domains/2.4.5/rooms/rum2.c");
+   add_exit("south", DIR + "/rooms/wiz_hall.c");
+   add_exit("east", DIR + "/rooms/rum2.c");
    add_action("sesame", "sesame");
    add_action("power", "power");
    add_action("test", "test");
    add_action("do_reset", "reset");
+   add_action("do_hit", "hit");
 
    add_item("amiga", "#do_computer");
    add_item("computer", "#do_computer");
 
-   set_objects (DIR + "/obj/jacket.c");
+   set_objects (DIR + "/obj/jacket.c",
+      DIR + "/obj/bag.c");
    a = 0;
    amiga_present = 0;
    amiga_power = 0;
@@ -45,6 +48,19 @@ string do_computer() {
    }
 }
 
+int do_hit(string str) {
+   if (amiga_present) {
+      if ((str == "amiga") || (str == "computer")) {
+         write("You hit the amiga.");
+		 tell_room(this_player(),
+		    this_player()->query_Name() + " hits the amiga HARD!");
+		 return 1;
+      }
+   }
+   write("Hit what?");
+   return 1;
+}
+
 string query_long() {
    string str;
 
@@ -58,8 +74,6 @@ string query_long() {
    }
    return str;
 }
-
-/* XXX Need to work on exits, computer and a bunch of other stuff. */
 
 int sesame(string str) {
    if (amiga_present) {
