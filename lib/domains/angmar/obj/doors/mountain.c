@@ -7,7 +7,7 @@ void setup(void) {
    set_adj("strong");
    set_short("A strong door");
    set_long("The door looks very strong.");
-   mudlib_setup(({ "north", "misty-mountain-door" }));
+   door_setup("north", "misty-mountain-door");
    add_block("north");
    set_lock_code("auxd");
 }

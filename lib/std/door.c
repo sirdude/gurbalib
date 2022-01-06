@@ -88,18 +88,15 @@ int do_block(object who) {
    return 1;
 }
 
-void mudlib_setup(mixed *args) {
+void door_setup(string exit, string identity) {
 
-   if (sizeof(args) != 2) {
-      return;
-   }
+   add_adj(exit);
+   our_exit = exit;
+   our_identity = identity;
 
-   add_adj(args[0]);
-
-   our_exit = args[0];
-   our_identity = args[1];
    update_sibling();
    add_block(our_exit);
+
    set_open_description(query_open_description() + " %^CYAN%^[" + our_exit +
       "]%^RESET%^");
    set_closed_description(query_closed_description() + " %^CYAN%^[" + our_exit +

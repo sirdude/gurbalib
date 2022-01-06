@@ -375,15 +375,24 @@ the mine, and a key that the players will need to locate to unlock the
 door.
 
 Edit ~/obj/irondoor.c and make it look like this:
-	inherit "/std/door";
+	inherit "/std/lockable_door";
 
 	void setup(void) {
+	   set_id("door");
+	   set_adj("sturdy");
  	   set_short("A sturdy iron door");
-           set_long("This thing is solid, your not getting through it " +
+       set_long("This thing is solid, your not getting through it " +
               "without the key.  What kind of thing needs a heavy door " +
               "like this?");
-	   mudlib_setup("west","ironminedoor");
+	   door_setup("west", "ironminedoor");
+	   add_block("west");
+	   set_lock_code("Bingo#");
 	}
+
+All of that should be pretty straight forward except maybe the last 3 lines.
+set_lock_code sets a string that must be present in a key to unlock the door.
+add_block is a function in the standard_door code to make the door tied to the exit west.
+door_setup sets what exit we are associated with and a unique name for our door.
 
 Add our door to ~/rooms/mine/mineshaft.c with the following code:
 	set_objects( DIR + "/obj/irondoor.c" );
@@ -396,28 +405,54 @@ Make the following modifications:
 	set_short("A rusty old key");
 	set_value(5);
 
+and change the string returned in: query_key_code  to:
+	"Bingo#"
+
+Right now it's a little silly because we have only a one sided door 
+so we need to add another door to: rooms/mine/bigrock.c
+To save time lets copy obj/irondoor.c to obj/irondoor2.c and make the following changes.
+change door_setup to "east" instead of "west".
+and add_block("east") instead of "west".
+
+To add our new door to bigrock.c just add it to our set_objects call which should
+now look like this:
+	set_objects(DIR + "/obj/bigrock.c",
+		DIR + "/obj/irondoor2.c");
+
 Add the following function to ~/obj/rubble.c, this will make it so we
 can find the key with the search command:
+In the setup function add the following line:
+    add_action("do_search", "search");
 
-int do_search(void) {
+Then below setup add the following function:
+int do_search(string str) {
+   object obj;
+
+   if (str != "rubble") {
+      return 0;
+   }
 
    if (this_player()->present("rusty key")) ||
-      this_player()->is_completed_quest("NewbieVille")) {
+      this_player()->is_completed_quest("AbandonedMine")) {
       write("You find nothing.\n");
       this_player()->query_environment()->tell_room(this_player(),
          this_player()->query_Name() +
          " digs through the rubble.\n");
-      return 1;
+   } else {
+      write("You dig through the rubble and find a rusty key and pick it up.\n");
+      this_player()->query_environment()->tell_room(this_player(),
+         this_player()->query_Name() +
+         " digs through the rubble.\n");
+       obj = clone_object(DIR + "/obj/ironkey.c");
+	   obj->move(this_player());
    }
-   return 0;
+   return 1;
 }
 
-XXX Need to attach the key to the door and place the key...
+XXX Maybe need to talk about code above a bit more...  also do we need to add our quest completed if so
+where should it go?
 
-
-End:
-
-Reward:
+Reward & Ending:
 The reward for this quest is that you are no longer trapped.  Not that
 great but at least you'll be free to adventure again.  You'll also
 get a quest completed entry, many mud's will not allow you to be a
@@ -434,7 +469,15 @@ the setup function in escape.c:
    add_item("rubble", "The wall has a bunch of rocks.  It looks like " +
       "you might be able to move it.");
 
-XXX Need to add red herrings and other fluff...
+Now that we have the basics done, I'll leave it to you as an exercise to
+add some red herrings and other fluff...  Some examples of this might be:
+Add another key that will not work with the door.
+Add some extra item descriptions like the rubble which basically do nothing.
+Make sure you somehow highlight the descriptions so people know to look for them.
+(hints in the long description of a room, that kind of thing.)
+This is what gives your area character, spend some time on this, don't skimp and
+just do what's needed for the main quest of your area.  Flesh it out and give it some
+extra flare.
 
 10. Adding your code to the rest of the mud.
 There are 3 parts to this, you need to integrate any entrance/exits you
