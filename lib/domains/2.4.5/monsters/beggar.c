@@ -37,7 +37,7 @@ void do_extra_actions() {
       }
       count = 0;
    }
-/* May need to change this up.... XXX check for coin and value? */
+
 /*
  * respond() uses a callout so we have to string them together
  * with call_out() that is greater than the delay of respond().

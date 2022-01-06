@@ -36,8 +36,8 @@ void give_castle(string who) {
    player = this_environment()->present(who);
    if (player) {
       if (query_wizard(player)) {
-         /* XXX Not sure if want to do castles that way or not so do this
-            instead for now */
+	     /* originally the mudlib had castles, were not doing that though so here we are...
+		    If you are interested in that please look at the original mudlib */
          this_environment()->tell_room(this_object(), "Leo says: I seem to " +
             "have missplaced my portable castles, please come back later.");
       } else {
