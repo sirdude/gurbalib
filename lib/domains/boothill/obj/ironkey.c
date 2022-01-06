@@ -10,3 +10,7 @@ void setup(void) {
    set_value(5);
    set_weight(2);
 }
+
+string query_key_code(void) {
+	return "Bingo#";
+}

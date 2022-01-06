@@ -1,3 +1,5 @@
+#include "lockable.h"
+
 static int lock_state;
 static string lock_id;
 static string lock_code;

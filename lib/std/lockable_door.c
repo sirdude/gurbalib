@@ -1,3 +1,4 @@
+#include "lockable.h"
 inherit "/std/door";
 inherit "/std/modules/m_lockable";
 

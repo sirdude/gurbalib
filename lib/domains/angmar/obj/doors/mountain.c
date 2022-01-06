@@ -1,4 +1,4 @@
-#include "/wiz/olya/include.h"
+#include "../../domain.h"
 
 inherit "/std/lockable_door";
 

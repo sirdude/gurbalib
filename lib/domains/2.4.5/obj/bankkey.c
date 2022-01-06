@@ -12,3 +12,7 @@ void setup(void) {
    set_value(8);
    set_weight(2);
 }
+
+string query_key_code() {
+   return "bankvault01";       
+}
