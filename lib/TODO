@@ -10,8 +10,6 @@ look into a "git" interface for security and editing files.
 Need to research writeable files for wizards/admins and see what
 makes sense.
 
-m_lockable, keys
-m_switchable, Levers
 auto dest/update of all instances of an object
 
 Old stuff from ../doc/TODO:
