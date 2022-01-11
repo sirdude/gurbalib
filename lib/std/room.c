@@ -23,17 +23,16 @@ private int object_is_lighted(object obj) {
 
    if (obj->is_living()) {
       objs = obj->query_inventory();
-      for (i = 0, dim = sizeof(objs); i < dim; i++) {
-         if (objs[i]->functionp("query_lit")) {
-            if (objs[i]->query_lit()) {
-               return 1;
-            }
+	  dim = sizeof(objs);
+      for (i = 0; i < dim; i++) {
+         if (objs[i]->query_lit()) {
+            return 1;
          }
       }
    }
 
-   if (obj->functionp("query_lit")) {
-      return obj->query_lit();
+   if (obj->query_lit()) {
+      return 1;
    }
 
    return 0;
@@ -47,12 +46,10 @@ int is_dark(void) {
       return 0;
    }
 
-   if (is_container()) {
-      objs = query_inventory();
-      for (x = sizeof(objs) -1; x >= 0; x--) {
-         if (object_is_lighted(objs[x])) {
-            return 0;
-         }
+   objs = query_inventory();
+   for (x = sizeof(objs) -1; x >= 0; x--) {
+      if (object_is_lighted(objs[x])) {
+         return 0;
       }
    }
 
