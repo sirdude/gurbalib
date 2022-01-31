@@ -3,8 +3,8 @@
 inherit "/std/object";
 
 void setup(void) {
-   set_id("climbing gear");
-   add_id("gear");
+   set_id("gear");
+   add_id("climbing gear");
    add_adj("climbing");
    set_short("A set of climbing gear");
    set_long("A set of high quality, professional climbing gear. " +
