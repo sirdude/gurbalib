@@ -64,7 +64,7 @@ string query_name(void);
 
 /* Save the player */
 void save_me(void) {
-   if ((living_name != "guest") && (living_name != "who")) {
+   if ((living_name != "guest") && (living_name != "who") && (living_name != "mudlib")) {
       unguarded("save_object", "/data/players/" + living_name + ".o");
    }
 }
