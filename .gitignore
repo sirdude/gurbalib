@@ -30,4 +30,5 @@ lib/kernel/include/trace.h
 lib/kernel/include/type.h
 lib/kernel/include/local_config.h
 lib/kernel/include/auto_config.h
+lib/kernel/include/connect.h
 lib/kernel/include/auto_config.h.previous
