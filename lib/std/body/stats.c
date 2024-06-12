@@ -197,7 +197,7 @@ void initialize_base_stats(void) {
 
    while (!sOK) {
 
-      s = ({ "0", "0", "0", "0", "0", "0" });
+      s = ({ 0, 0, 0, 0, 0, 0 });
       i = 0;
       for (i = 0; i < 6; i++) {
          s[i] = random(race->query_base_stat_maximum(VALID_STATS[i]) -

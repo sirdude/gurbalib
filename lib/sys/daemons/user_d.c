@@ -593,7 +593,7 @@ object **query_all_online(void) {
 }
 
 string **query_all_online_names(void) {
-   object *a, *m, *w;
+   mixed *a, *m, *w;
 
    ({ a, w, m }) = query_all_online();
 
